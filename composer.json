@@ -1,0 +1,39 @@
+{
+    "name": "qingbing/php-database",
+    "description": "database 配置的设置和获取.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "php",
+        "db",
+        "database"
+    ],
+    "homepage": "http://www.phpcorner.net",
+    "authors": [
+        {
+            "name": "qingbing",
+            "email": "780042175@qq.com"
+        }
+    ],
+    "require": {
+        "qingbing/php-helper": ">=1.0, <2.0",
+        "qingbing/php-config": ">=1.0, <2.0",
+        "qingbing/php-cache-file": ">=1.0, <2.0",
+        "qingbing/php-log": ">=1.0, <2.0"
+    },
+    "autoload": {
+        "classmap": [
+            "src/Db.php",
+            "src/DbModel.php"
+        ],
+        "psr-4": {
+            "Db\\": "src/lib"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TestCore\\": "test/core",
+            "Test\\": "test/src"
+        }
+    }
+}

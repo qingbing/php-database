@@ -1,0 +1,11 @@
+composer.phar
+composer.lock
+/.buildpath/
+/.project/
+/.settings/
+/.idea/
+/vendor/
+/runtime/*
+/docs/*
+*~~*
+*swp
