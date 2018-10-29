@@ -25,5 +25,6 @@ class TestDb extends Tester
      */
     public function run()
     {
+        $db = \Db::getInstance();
     }
 }
