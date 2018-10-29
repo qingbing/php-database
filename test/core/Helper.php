@@ -34,11 +34,15 @@ class Helper extends Tester
         }
         closedir($op);
         // 制作链接视图
-        $aString = [];
-        foreach ($urls as $url) {
-            array_push($aString, "<a href='{$url}' target='_blank'>{$url}</a>");
+        if (isset($_SERVER['argv'])) {
+            echo implode("\r\n", $urls) . "\r\n\r\n";
+        } else {
+            $aString = [];
+            foreach ($urls as $url) {
+                array_push($aString, "<a href='{$url}' target='_blank'>{$url}</a>");
+            }
+            echo implode("\r\n<br/>", $aString);
         }
-        echo implode("\r\n<br/>", $aString);
     }
 
     /**
@@ -49,7 +53,11 @@ class Helper extends Tester
     {
         static $_baseUri;
         if (null === $_baseUri) {
-            $_baseUri = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}?c=";
+            if (isset($_SERVER['argv'])) {
+                $_baseUri = "php {$_SERVER['SCRIPT_NAME']} --c=";
+            } else {
+                $_baseUri = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}?c=";
+            }
         }
         return $_baseUri;
     }

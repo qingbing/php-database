@@ -9,8 +9,6 @@ require("../vendor/autoload.php");
 
 define('ENV', "local");
 
-$className = isset($_GET['c']) ? $_GET['c'] : 'Helper';
-
 try {
     if ($_GET['c']) {
         $className = $_GET['c'];

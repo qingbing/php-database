@@ -25,6 +25,73 @@ class TestDb extends Tester
      */
     public function run()
     {
+        /**
+         * 获取db实例
+         */
         $db = \Db::getInstance();
+
+        /**
+         * 基础信息获取
+         */
+        // 获取数据库的服务信息
+        /*   $serverInfo = $db->getServerInfo();
+           var_dump($serverInfo);
+           // 获取数据库的版本信息
+           $serverVersion = $db->getServerVersion();
+           var_dump($serverVersion);
+           // 获取驱动的版本信息
+           $clientVersion = $db->getClientVersion();
+           var_dump($clientVersion);*/
+
+        /**
+         * sql语句操作
+         */
+        // sql 插入语句范例
+        $sql = "INSERT INTO `{{stu}}` (`name`,`sex`) VALUES (:name,:sex)";
+        $res = $db->insertSql($sql, [
+            ':name' => 'name_12',
+            ':sex' => 'sex_12',
+        ]);
+        var_dump($res);
+        // sql 更新语句范例
+        $sql = "UPDATE `{{stu}}` SET `sex`=:sex WHERE id>=:bid AND id<=:eid";
+        $res = $db->updateSql($sql, [
+            ':sex' => 12345678,
+            ':bid' => 2,
+            ':eid' => 4,
+        ]);
+        var_dump($res);
+
+
+        /**
+         * builder 操作
+         */
+
+        /**
+         * 数组操作
+         */
+        // 单记录数组插入操作
+        $res = $db->insert('{{stu}}', [
+            'name' => 'name_1',
+            'sex' => 'sex_1',
+        ]);
+        var_dump($res);
+        // 多记录数组插入操作
+        $res = $db->insertData('{{stu}}', [
+            ['name' => 'name_2', 'sex' => 'sex_2',],
+            ['name' => 'name_3', 'sex' => 'sex_3',],
+        ]);
+        var_dump($res);
+        // 获取插入的最后一次的insertID
+        $lastId = $db->getLastInsertId();
+        var_dump($lastId);
+
+        // 更新数组操作
+        $res = $db->update('{{stu}}', ['sex' => '12345'], 'id>=:bid AND id<=:eid', [
+            ':bid' => 2,
+            ':eid' => 4,
+        ]);
+        var_dump($res);
+        var_dump(9999);
     }
 }
