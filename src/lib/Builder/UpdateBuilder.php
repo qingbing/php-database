@@ -49,9 +49,9 @@ class UpdateBuilder extends SqlBuilder
             || !isset($query['columns']) || empty($query['columns'])
             || !isset($query['where']) || empty($query['where'])
         ) {
-            throw new Exception(str_cover('Query-{type} parameters are incomplete.', [
+            throw new Exception(str_cover('"{type}"查询参数不完整', [
                 '{type}' => 'update'
-            ]));
+            ]), 100800201);
         }
         $setV = $VS = [];
         foreach ($query['columns'] as $k => $v) {

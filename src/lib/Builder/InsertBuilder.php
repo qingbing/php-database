@@ -97,9 +97,9 @@ class InsertBuilder extends SqlBuilder
             !isset($query['table']) || empty($query['table'])
             || !isset($query['columns']) || empty($query['columns'])
         ) {
-            throw new Exception(str_cover('Query-{type} parameters are incomplete.', [
+            throw new Exception(str_cover('"{type}"查询参数不完整', [
                 '{type}' => 'insert'
-            ]));
+            ]), 100800301);
         }
         $KS = $VS = [];
         foreach ($query['columns'] as $k => $v) {
@@ -131,9 +131,9 @@ class InsertBuilder extends SqlBuilder
             || !isset($query['multi-fields']) || empty($query['multi-fields'])
             || !isset($query['multi-data']) || empty($query['multi-data'])
         ) {
-            throw new Exception(str_cover('Query-{type} parameters are incomplete.', [
+            throw new Exception(str_cover('"{type}"查询参数不完整', [
                 '{type}' => 'multi-insert'
-            ]));
+            ]), 100800302);
         }
         $KS = [];
         foreach ($query['multi-fields'] as $k) {

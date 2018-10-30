@@ -41,9 +41,9 @@ class DeleteBuilder extends SqlBuilder
             !isset($query['table']) || empty($query['table'])
             || !isset($query['where']) || empty($query['where'])
         ) {
-            throw new Exception(str_cover('Query-{type} parameters are incomplete.', [
+            throw new Exception(str_cover('"{type}"查询参数不完整', [
                 '{type}' => 'delete'
-            ]));
+            ]), 100800401);
         }
         return 'DELETE FROM ' . $this->quoteTableName($query['table']) . ' WHERE ' . $query['where'];
     }

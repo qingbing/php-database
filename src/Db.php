@@ -157,7 +157,7 @@ class Db extends \Helper\Base
     {
         if (null === $this->_pdo) {
             if (empty($this->dsn)) {
-                throw new Exception("Db.Connection.connectionString cannot be empty.");
+                throw new Exception('数据库连接串"dsn"不能为空', 100800101);
             }
             try {
                 Timer::begin('db-connect');
@@ -171,11 +171,11 @@ class Db extends \Helper\Base
                 ]);
             } catch (\PDOException $e) {
                 if (PHP_DEBUG) {
-                    $err_msg = 'db-connection failed to open the DB connection: ' . $e->getMessage();
+                    $err_msg = '数据库连接失败: (' . $e->getCode() . ')' . $e->getMessage();
                 } else {
-                    $err_msg = 'db-Connection failed to open the DB connection.';
+                    $err_msg = '数据库连接失败.(' . $e->getCode() . ')';
                 }
-                throw new Exception($err_msg, (int)$e->getCode(), $e->errorInfo);
+                throw new Exception($err_msg, 100800102, $e->errorInfo);
             }
         }
     }
@@ -198,14 +198,14 @@ class Db extends \Helper\Base
     {
         $pdoClass = $this->pdoClass;
         if (!class_exists($pdoClass)) {
-            throw new Exception(str_cover('db-connection is unable to find PDO class "{className}". Make sure PDO is installed correctly.', [
+            throw new Exception(str_cover('PDO连接库"{className}"不存在', [
                 '{className}' => $pdoClass
-            ]));
+            ]), 100800104);
         }
         // 创建 PDO 实例
         @$instance = new $pdoClass($this->dsn, $this->username, $this->password);
         if (!$instance) {
-            throw new Exception('db-connection failed to open the DB connection.\'');
+            throw new Exception('PDO连接数据库失败.', 100800103);
         }
         return $instance;
     }

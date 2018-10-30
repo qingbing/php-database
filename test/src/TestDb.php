@@ -108,24 +108,21 @@ class TestDb extends Tester
             ':eid' => 4,
         ]);
         var_dump($res);
-        // 查询符合条件的记录数
-        $count = $db->count('{{stu}}');
-        var_dump($count);
         // 初始化 条件
         $criteria = new Criteria();
-        $criteria->addWhere('id>:startId', [
-            ':startId' => 2
-        ]);
+        $criteria->setTable('{{stu}}')
+            ->addWhere('id>:startId', [
+                ':startId' => 2
+            ]);
         // 查询符合条件的记录数
-        $count = $db->count('{{stu}}', $criteria);
+        $count = $db->count($criteria);
         var_dump($count);
         // 查询符合条件的首条记录
-        $row = $db->find('{{stu}}', $criteria);
+        $row = $db->find($criteria);
         var_dump($row);
         // 查询符合条件的全部记录
-        $res = $db->findAll('{{stu}}', $criteria);
+        $res = $db->findAll($criteria);
         var_dump($res);
         var_dump('===== over ====');
-
     }
 }

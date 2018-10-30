@@ -41,10 +41,7 @@ class Pagination extends Base
         } elseif (is_string($sqlment)) {
             $this->_dbInstance = new SqlPagination ($sqlment, $params, $db);
         } else {
-            throw new Exception(str_cover('pagination 构建参数无效', [
-                'function' => get_class($this) . '=>__construct',
-                'parameter' => 'sqlment',
-            ]));
+            throw new Exception('pagination 构建参数"sqlment"无效', 100800701);
         }
     }
 
