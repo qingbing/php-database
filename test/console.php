@@ -5,6 +5,7 @@
  * Date         :   2018-05-19
  * Version      :   1.0
  */
+error_reporting(E_ALL);
 require("../vendor/autoload.php");
 
 define('ENV', "dev");
@@ -19,6 +20,6 @@ try {
     }
     /* @var $class \TestCore\Tester */
     $class::getInstance()->run();
-} catch (Exception $e) {
+} catch (\Exception $e) {
     var_dump($e);
 }

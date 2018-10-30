@@ -23,8 +23,7 @@
     },
     "autoload": {
         "classmap": [
-            "src/Db.php",
-            "src/DbModel.php"
+            "src/Db.php"
         ],
         "psr-4": {
             "Db\\": "src/lib"

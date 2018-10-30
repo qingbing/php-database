@@ -11,6 +11,7 @@ use Db\Builder\FindBuilder;
 use Db\Builder\InsertBuilder;
 use Db\Builder\UpdateBuilder;
 use Db\Command;
+use Db\Transaction;
 use Helper\Timer;
 
 defined('PHP_DEBUG') or define('PHP_DEBUG', false);
@@ -69,6 +70,11 @@ class Db extends \Helper\Base
     private $_pdo;
     private $_active = false; // 连接是否被激活
     private $_attributes = []; // PDO连接属性
+    /**
+     * DB 当前事务处理
+     * @var Transaction
+     */
+    private $_transaction;
 
     /**
      * Db constructor.
@@ -286,6 +292,30 @@ class Db extends \Helper\Base
     }
 
     /**
+     * 获取当前事务
+     * @return Transaction
+     */
+    public function getCurrentTransaction()
+    {
+        if (null !== $this->_transaction && $this->_transaction->getActive()) {
+            return $this->_transaction;
+        }
+        return null;
+    }
+
+    /**
+     * 开始 db 事务处理
+     * @return Transaction
+     * @throws Exception
+     */
+    public function beginTransaction()
+    {
+        $this->setActive(true);
+        $this->_pdo->beginTransaction();
+        return $this->_transaction = new Transaction($this);
+    }
+
+    /**
      * Sql 命令执行器
      * @return Command
      */
@@ -361,8 +391,8 @@ class Db extends \Helper\Base
      */
     public function getLastInsertId()
     {
-        return $this->createCommand()
-            ->getLastInsertId();
+        return $this->getPdoInstance()
+            ->lastInsertId();
     }
 
     /**
@@ -405,8 +435,8 @@ class Db extends \Helper\Base
         return $this->getUpdateBuilder()
             ->setTable($table)
             ->setColumns($columns)
-            ->setWhere($where)
-            ->execute($params);
+            ->setWhere($where, $params)
+            ->execute();
     }
 
     /**
@@ -444,8 +474,8 @@ class Db extends \Helper\Base
     {
         return $this->getDeleteBuilder()
             ->setTable($table)
-            ->setWhere($where)
-            ->execute($params);
+            ->setWhere($where, $params)
+            ->execute();
     }
 
     /**
@@ -499,18 +529,53 @@ class Db extends \Helper\Base
         return new FindBuilder($this);
     }
 
-    public function count($table, $where)
+    /**
+     * 查询影响的结果集行数，对于 select ，rowCount() 返回有可能为部分结果，这里用统计更好
+     * @param \Db\Builder\Criteria $criteria
+     * @return int
+     * @throws Exception
+     */
+    public function count($criteria)
     {
-        // TODO
+        return $this->getFindBuilder()
+            ->addCriteria($criteria)
+            ->count();
     }
 
-    public function findData($table, $where)
+    /**
+     * 查询第一条结果集
+     * @param \Db\Builder\Criteria $criteria
+     * @return array
+     * @throws Exception
+     */
+    public function find($criteria)
     {
-        // TODO
+        return $this->getFindBuilder()
+            ->addCriteria($criteria)
+            ->queryRow();
     }
 
-    public function findAllData($table, $where)
+    /**
+     * 查询所有结果集
+     * @param \Db\Builder\Criteria $criteria
+     * @return array
+     * @throws Exception
+     */
+    public function findAll($criteria)
     {
-        // TODO
+        return $this->getFindBuilder()
+            ->addCriteria($criteria)
+            ->queryAll();
+    }
+
+    /**
+     * @param \Db\Builder\Criteria|array|string $criteria
+     * @param array $params
+     * @return \Db\Pagination\Pagination
+     * @throws \Helper\Exception
+     */
+    public function pagination($criteria, $params = [])
+    {
+        return new Db\Pagination\Pagination($criteria, $params, $this);
     }
 }

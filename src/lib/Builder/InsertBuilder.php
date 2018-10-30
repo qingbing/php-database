@@ -29,9 +29,9 @@ class InsertBuilder extends SqlBuilder
     public function setMultiFields(array $fields = [])
     {
         if (empty($fields)) {
-            unset($this->_query['multi-fields']);
+            unset($this->query['multi-fields']);
         } else {
-            $this->_query['multi-fields'] = $fields;
+            $this->query['multi-fields'] = $fields;
         }
         return $this;
     }
@@ -44,9 +44,9 @@ class InsertBuilder extends SqlBuilder
     public function setMultiData(array $data = [])
     {
         if (empty($data)) {
-            unset($this->_query['multi-data']);
+            unset($this->query['multi-data']);
         } else {
-            $this->_query['multi-data'] = $data;
+            $this->query['multi-data'] = $data;
         }
         return $this;
     }
@@ -58,10 +58,10 @@ class InsertBuilder extends SqlBuilder
      */
     public function addMultiData(array $data = [])
     {
-        if (!isset($this->_query['multi-data'])) {
-            $this->_query['multi-data'] = [];
+        if (!isset($this->query['multi-data'])) {
+            $this->query['multi-data'] = [];
         }
-        $this->_query['multi-data'][] = $data;
+        $this->query['multi-data'][] = $data;
         return $this;
     }
 
@@ -73,7 +73,7 @@ class InsertBuilder extends SqlBuilder
      */
     public function execute($params = [])
     {
-        if (isset($this->_query['columns'])) {
+        if (isset($this->query['columns'])) {
             $sql = $this->buildSql();
         } else {
             $sql = $this->buildMultiSql();
