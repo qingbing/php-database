@@ -6,6 +6,8 @@
  * Version      :   1.0
  */
 
+use Db\Builder\DeleteBuilder;
+use Db\Builder\FindBuilder;
 use Db\Builder\InsertBuilder;
 use Db\Builder\UpdateBuilder;
 use Db\Command;
@@ -203,6 +205,15 @@ class Db extends \Helper\Base
     }
 
     /**
+     * 返回 PDO 对象实例
+     * @return \PDO|null
+     */
+    public function getPdoInstance()
+    {
+        return $this->_pdo;
+    }
+
+    /**
      * db 连接预处理
      * @param \PDO $pdo
      */
@@ -216,15 +227,6 @@ class Db extends \Helper\Base
         if (null !== $this->charset) {
             $pdo->exec('SET NAMES ' . $pdo->quote($this->charset));
         }
-    }
-
-    /**
-     * 返回 PDO 对象实例
-     * @return \PDO|null
-     */
-    public function getPdoInstance()
-    {
-        return $this->_pdo;
     }
 
     /**
@@ -299,12 +301,11 @@ class Db extends \Helper\Base
      * @return int
      * @throws Exception
      */
-    public function insertSql($sql, $params = [])
+    public function insertBySql($sql, $params = [])
     {
         return $this->createCommand()
             ->setText($sql)
             ->execute($params);
-
     }
 
     /**
@@ -365,12 +366,13 @@ class Db extends \Helper\Base
     }
 
     /**
+     * 通过 sql 更新数据库，返回成功更新的数据条数
      * @param string $sql
      * @param $params
      * @return int
      * @throws Exception
      */
-    public function updateSql($sql, $params = [])
+    public function updateBySql($sql, $params = [])
     {
         return $this->createCommand()
             ->setText($sql)
@@ -407,56 +409,108 @@ class Db extends \Helper\Base
             ->execute($params);
     }
 
-
-    public function deleteSql($sql)
+    /**
+     * 通过 sql 删除数据库，返回成功删除的数据条数
+     * @param string $sql
+     * @param array $params
+     * @return int
+     * @throws Exception
+     */
+    public function deleteBySql($sql, $params = [])
     {
-
-        $builder = $this->createBuilder();
-
+        return $this->createCommand()
+            ->setText($sql)
+            ->execute($params);
     }
 
-    public function findSql($sql)
+    /**
+     * 返回一个 db-delete 的builder
+     * @return DeleteBuilder
+     */
+    public function getDeleteBuilder()
     {
-        $builder = $this->createBuilder();
-
+        return new DeleteBuilder($this);
     }
 
-    public function findCountSql($sql)
+    /**
+     * 通过 builder 删除数据库，返回成功删除的数据条数
+     * @param string $table
+     * @param string $where
+     * @param array $params
+     * @return int
+     * @throws Exception
+     */
+    public function delete($table, $where = '', $params = [])
     {
-        $builder = $this->createBuilder();
-
+        return $this->getDeleteBuilder()
+            ->setTable($table)
+            ->setWhere($where)
+            ->execute($params);
     }
 
-    public function findAllSql($sql)
+    /**
+     * 通过 sql 查询符合条件的记录数
+     * @param string $sql
+     * @param array $params
+     * @return int
+     * @throws Exception
+     */
+    public function countBySql($sql, $params = [])
     {
-        $builder = $this->createBuilder();
-
+        return $this->createCommand()
+            ->setText($sql)
+            ->count($params);
     }
 
-    public function delete($table, $where)
+    /**
+     * 通过 sql 查询符合条件的第一条记录
+     * @param string $sql
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public function findBySql($sql, $params = [])
     {
+        return $this->createCommand()
+            ->setText($sql)
+            ->queryRow($params);
     }
 
-    public function findCount($table, $where)
+    /**
+     * 通过 sql 查询符合条件的第一条记录
+     * @param string $sql
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public function findAllBySql($sql, $params = [])
     {
+        return $this->createCommand()
+            ->setText($sql)
+            ->queryAll($params);
+    }
+
+    /**
+     * 返回一个 db-find 的builder
+     * @return FindBuilder
+     */
+    public function getFindBuilder()
+    {
+        return new FindBuilder($this);
+    }
+
+    public function count($table, $where)
+    {
+        // TODO
     }
 
     public function findData($table, $where)
     {
+        // TODO
     }
 
     public function findAllData($table, $where)
     {
+        // TODO
     }
-
-    public function getDeleteBuilder()
-    {
-
-    }
-
-    public function getFindBuilder()
-    {
-
-    }
-
 }

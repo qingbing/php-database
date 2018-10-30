@@ -46,22 +46,40 @@ class TestDb extends Tester
         /**
          * sql语句操作
          */
-        // sql 插入语句范例
-        $sql = "INSERT INTO `{{stu}}` (`name`,`sex`) VALUES (:name,:sex)";
-        $res = $db->insertSql($sql, [
-            ':name' => 'name_12',
-            ':sex' => 'sex_12',
-        ]);
-        var_dump($res);
-        // sql 更新语句范例
-        $sql = "UPDATE `{{stu}}` SET `sex`=:sex WHERE id>=:bid AND id<=:eid";
-        $res = $db->updateSql($sql, [
-            ':sex' => 12345678,
-            ':bid' => 2,
-            ':eid' => 4,
-        ]);
-        var_dump($res);
+//        // sql 插入语句范例
+//        $sql = "INSERT INTO `{{stu}}` (`name`,`sex`) VALUES (:name,:sex)";
+//        $res = $db->insertBySql($sql, [
+//            ':name' => 'name_12',
+//            ':sex' => 'sex_12',
+//        ]);
+//        var_dump($res);
+//        // sql 更新语句范例
+//        $sql = "UPDATE `{{stu}}` SET `sex`=:sex WHERE id>=:bid AND id<=:eid";
+//        $res = $db->updateBySql($sql, [
+//            ':sex' => 12345678,
+//            ':bid' => 2,
+//            ':eid' => 4,
+//        ]);
+//        var_dump($res);
+//        // sql 删除语句范例
+//        $sql = "DELETE FROM `{{stu}}` WHERE id>=:bid AND id<=:eid";
+//        $res = $db->deleteBySql($sql, [
+//            ':bid' => 2,
+//            ':eid' => 4,
+//        ]);
+//        var_dump($res);
+        // Sql 查询符合条件的记录数
+//        $sql = "SELECT * FROM `{{stu}}`";
+//        $count = $db->countBySql($sql);
+//        var_dump($count);
+//
+//        $sql = "SELECT * FROM `{{stu}}`";
+//        $row = $db->findBySql($sql);
+//        var_dump($row);
 
+//        $sql = "SELECT * FROM `{{stu}}`";
+//        $records = $db->findAllBySql($sql);
+//        var_dump($records);
 
         /**
          * builder 操作
@@ -70,28 +88,36 @@ class TestDb extends Tester
         /**
          * 数组操作
          */
-        // 单记录数组插入操作
-        $res = $db->insert('{{stu}}', [
-            'name' => 'name_1',
-            'sex' => 'sex_1',
-        ]);
-        var_dump($res);
-        // 多记录数组插入操作
-        $res = $db->insertData('{{stu}}', [
-            ['name' => 'name_2', 'sex' => 'sex_2',],
-            ['name' => 'name_3', 'sex' => 'sex_3',],
-        ]);
-        var_dump($res);
-        // 获取插入的最后一次的insertID
-        $lastId = $db->getLastInsertId();
-        var_dump($lastId);
+//        // 单记录数组插入操作
+//        $res = $db->insert('{{stu}}', [
+//            'name' => 'name_1',
+//            'sex' => 'sex_1',
+//        ]);
+//        var_dump($res);
+//        // 多记录数组插入操作
+//        $res = $db->insertData('{{stu}}', [
+//            ['name' => 'name_2', 'sex' => 'sex_2',],
+//            ['name' => 'name_3', 'sex' => 'sex_3',],
+//        ]);
+//        var_dump($res);
+//        // 获取插入的最后一次的insertID
+//        $lastId = $db->getLastInsertId();
+//        var_dump($lastId);
 
-        // 更新数组操作
-        $res = $db->update('{{stu}}', ['sex' => '12345'], 'id>=:bid AND id<=:eid', [
-            ':bid' => 2,
-            ':eid' => 4,
-        ]);
-        var_dump($res);
-        var_dump(9999);
+//        // 更新数组操作
+//        $res = $db->update('{{stu}}', ['sex' => '12345'], 'id>=:bid AND id<=:eid', [
+//            ':bid' => 2,
+//            ':eid' => 4,
+//        ]);
+//        var_dump($res);
+//        // 删除 build 操作
+//        $res = $db->delete('{{stu}}', 'id>=:bid AND id<=:eid', [
+//            ':bid' => 2,
+//            ':eid' => 4,
+//        ]);
+//        var_dump($res);
+        // 查找 builder 操作
+        $db->count()
+
     }
 }

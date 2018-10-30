@@ -23,7 +23,7 @@ class TestCommand extends SingleTon
      */
     protected function init()
     {
-        if (!isset($_SERVER['argv'])) {
+        if (isset($_SERVER['argc']) && $_SERVER['argc'] > 0) {
             throw new Exception("该程序是cli模式，只能在命令行模式下用脚步执行");
         }
         $this->_scriptFile = $_SERVER['SCRIPT_NAME'];

@@ -33,8 +33,9 @@ class Helper extends Tester
             array_push($urls, $this->getBaseUri() . $className);
         }
         closedir($op);
+
         // 制作链接视图
-        if (isset($_SERVER['argv'])) {
+        if (isset($_SERVER['argc']) && $_SERVER['argc'] > 0) {
             echo implode("\r\n", $urls) . "\r\n\r\n";
         } else {
             $aString = [];
@@ -53,7 +54,7 @@ class Helper extends Tester
     {
         static $_baseUri;
         if (null === $_baseUri) {
-            if (isset($_SERVER['argv'])) {
+            if (isset($_SERVER['argc']) && $_SERVER['argc'] > 0) {
                 $_baseUri = "php {$_SERVER['SCRIPT_NAME']} --c=";
             } else {
                 $_baseUri = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}?c=";

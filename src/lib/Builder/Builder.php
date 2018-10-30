@@ -8,6 +8,7 @@
 
 namespace Db\Builder;
 
+use Db\Expression;
 use Helper\Base;
 
 /**
@@ -24,27 +25,7 @@ abstract class Builder extends Base
     protected $_query = [];
     private $_params = []; // SQL绑定参数
 
-    private $_db; // \Db
-
     static private $_paramCount = 0; // 参数绑定个数
-
-    /**
-     * Builder constructor.
-     * @param \Db $db
-     */
-    public function __construct(\Db $db)
-    {
-        $this->_db = $db;
-    }
-
-    /**
-     * 数据库连接
-     * @return \Db
-     */
-    public function getDb()
-    {
-        return $this->_db;
-    }
 
     /**
      * 引号包裹字段名称
@@ -100,7 +81,7 @@ abstract class Builder extends Base
      * 返回构造SQL语句的选项
      * @return array
      */
-    protected function getQuery()
+    public function getQuery()
     {
         return $this->_query;
     }
@@ -158,12 +139,6 @@ abstract class Builder extends Base
         }
         return $this;
     }
-
-    /**
-     * 创建 Sql-Command 语句
-     * @return string
-     */
-    abstract protected function buildSql();
 }
 
 /**
@@ -259,6 +234,147 @@ trait BuilderWhere
         }
         $this->_query['where'] = $where;
         return $this;
+    }
+
+    /**
+     * 设置 where 子句
+     * @param array $attributes
+     * @param string $operator
+     * @return $this
+     */
+    public function addWhereByAttributes($attributes, $operator = 'AND')
+    {
+        $t = [];
+        foreach ($attributes as $k => $v) {
+            if ($v instanceof Expression) {
+                $t[] = $k . '=' . $v->expression;
+                continue;
+            }
+            $bk = $this->getBindKey();
+            $this->addParam($bk, $v);
+            $t[] = $k . '=' . $bk;
+        }
+        return $this->addWhere(implode(' AND ', $t), $operator);
+    }
+
+    /**
+     * 添加 Where Like 条件
+     * @param string $column
+     * @param string $keyword
+     * @param bool|true $escape
+     * @param string $operator
+     * @param bool|true $isLike
+     * @return $this
+     */
+    public function addWhereLike($column, $keyword, $escape = true, $operator = 'AND', $isLike = true)
+    {
+        if (empty($keyword)) {
+            return $this;
+        }
+        if ($escape) {
+            $keyword = '%' . strtr($keyword, ['%' => '\%', '_' => '\_', '\\' => '\\\\']) . '%';
+        }
+        $bk = $this->getBindKey();
+        $this->addParam($bk, $keyword);
+        $condition = $column
+            . ($isLike ? " LIKE " : " NOT LIKE ")
+            . $bk;
+        return $this->addWhere($condition, $operator);
+    }
+
+    /**
+     * 添加 Where Not Like 条件
+     * @param string $column
+     * @param string $keyword
+     * @param bool|true $escape
+     * @param string $operator
+     * @return $this
+     */
+    public function addWhereNotLike($column, $keyword, $escape = true, $operator = 'AND')
+    {
+        return $this->addWhereLike($column, $keyword, $escape, $operator, false);
+    }
+
+    /**
+     * 添加 Where In 条件
+     * @param string $column
+     * @param array $values
+     * @param string $operator
+     * @param bool $isIn
+     * @return $this
+     */
+    public function addWhereIn($column, $values, $operator = 'AND', $isIn = true)
+    {
+        if (($n = count($values)) < 1) {
+            $condition = $isIn ? '0=1' : '1=1'; // 0=1 is used because in MSSQL value alone can't be used in WHERE
+        } else if (1 === $n) {
+            $value = reset($values);
+            if (null === $value) {
+                $condition = $column . ($isIn ? ' IS NULL' : ' IS NOT NULL');
+            } else {
+                if ($value instanceof Expression) {
+                    $condition = $column . ($isIn ? '=' : '!=') . $value->expression;
+                } else {
+                    $bk = $this->getBindKey();
+                    $this->addParam($bk, $value);
+                    $condition = $column . ($isIn ? '=' : '!=') . $bk;
+                }
+            }
+        } else {
+            $params = [];
+            foreach ($values as $value) {
+                if ($value instanceof Expression) {
+                    $params[] = $value->expression;
+                    continue;
+                }
+                $params[] = $bk = $this->getBindKey();
+                $this->addParam($bk, $value);
+            }
+            $condition = $column . ($isIn ? ' IN ' : ' NOT IN ') . '(' . implode(', ', $params) . ')';
+        }
+        return $this->addWhere($condition, $operator);
+    }
+
+    /**
+     * 添加 Where In 条件
+     * @param string $column
+     * @param array $values
+     * @param string $operator
+     * @return $this
+     */
+    public function addWhereNotIn($column, $values, $operator = 'AND')
+    {
+        return $this->addWhereIn($column, $values, $operator, false);
+    }
+
+    /**
+     * 添加 Where Between 条件
+     * @param string $column
+     * @param mixed $startVar
+     * @param mixed $endVar
+     * @param string $operator
+     * @return $this
+     */
+    public function addWhereBetween($column, $startVar, $endVar, $operator = 'AND')
+    {
+        if ('' === $startVar || '' === $endVar) {
+            return $this;
+        }
+        if ($startVar instanceof Expression) {
+            $startKey = $startVar->expression;
+        } else {
+            $startKey = $this->getBindKey();
+            $this->addParam($startKey, $startVar);
+        }
+        if ($endVar instanceof Expression) {
+            $endKey = $endVar->expression;
+        } else {
+            $endKey = $this->getBindKey();
+            $this->addParam($endKey, $endVar);
+        }
+
+        $condition = $column . " BETWEEN $startKey AND $endKey";
+        return $this->addWhere($condition, $operator);
     }
 
     /**

@@ -7,7 +7,7 @@
  */
 require("../vendor/autoload.php");
 
-define('ENV', "local");
+define('ENV', "dev");
 
 try {
     if ($_GET['c']) {

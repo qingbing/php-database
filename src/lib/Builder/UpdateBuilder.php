@@ -8,7 +8,6 @@
 
 namespace Db\Builder;
 
-
 use Db\Exception;
 use Db\Expression;
 
@@ -17,7 +16,7 @@ use Db\Expression;
  * Class UpdateBuilder
  * @package Db\Builder
  */
-class UpdateBuilder extends Builder
+class UpdateBuilder extends SqlBuilder
 {
     use BuilderTable;
     use BuilderColumns;

@@ -144,10 +144,9 @@ class Command extends Base
      * 查询影响的结果集行数，对于 select ，rowCount() 返回有可能为部分结果
      * @param array $params
      * @return int
-     * @throws DbException
-     * todo
+     * @throws \Exception
      */
-    public function queryCount($params = [])
+    public function count($params = [])
     {
         return $this->prepare($params)
             ->rowCount();
@@ -157,8 +156,7 @@ class Command extends Base
      * 查询第一条结果集
      * @param array $params
      * @return array
-     * @throws DbException
-     * todo
+     * @throws \Exception
      */
     public function queryRow($params = [])
     {
@@ -170,8 +168,7 @@ class Command extends Base
      * 查询所有结果集
      * @param array $params
      * @return array
-     * @throws DbException
-     * todo
+     * @throws \Exception
      */
     public function queryAll($params = [])
     {
