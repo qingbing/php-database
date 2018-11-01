@@ -32,7 +32,7 @@ class Db extends \Helper\Base
     public static function getInstance($type = 'master')
     {
         if (!isset(self::$_instances[$type])) {
-            $config = Config::suffix(Config::getInstance('database', 'master')->getAll());
+            $config = Config::getInstance('database', 'master')->params('database.mysql');
             return self::$_instances[$type] = new self($config);
         }
         return self::$_instances[$type];
