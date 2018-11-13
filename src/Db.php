@@ -10,7 +10,9 @@ use Db\Builder\DeleteBuilder;
 use Db\Builder\FindBuilder;
 use Db\Builder\InsertBuilder;
 use Db\Builder\UpdateBuilder;
+use Db\ColumnSchema;
 use Db\Command;
+use Db\TableSchema;
 use Db\Transaction;
 use Helper\Timer;
 
@@ -38,42 +40,34 @@ class Db extends \Helper\Base
         return self::$_instances[$type];
     }
 
-    public $dsn; // 数据库链接串 eg：'mysql:dbname=mydatabase;host=127.0.0.1;charset=utf8;'
-    public $username = ''; // 数据库连接用户
-    public $password = ''; // 数据库连接密码
-    public $autoConnect = true; // 数据库是否自动连接
-    public $pdoClass = '\PDO'; // 链接数据库使用的类名，默认：\PDO
-    public $logFile = false; // 是否记录在文件log上
-    /**
-     * 数据库连接使用编码
-     * 该属性只在 MySql 和 PostgreSQL 中有效
-     * PHP 5.3.6+, 'mysql:dbname=mydatabase;host=127.0.0.1;charset=utf8;'
-     * @var string
-     */
+    /* @var string 数据库链接串 eg：'mysql:dbname=mydatabase;host=127.0.0.1;charset=utf8;' */
+    public $dsn;
+    /* @var string 数据库连接用户 */
+    public $username = '';
+    /* @var string 数据库连接密码 */
+    public $password = '';
+    /* @var bool 数据库是否自动连接 */
+    public $autoConnect = true;
+    /* @var string 链接数据库使用的类名，默认：\PDO */
+    public $pdoClass = '\PDO';
+    /* @var bool 是否记录在文件log上 */
+    public $logFile = false;
+    /* @var string 数据库连接使用编码,该属性只在 MySql 和 PostgreSQL 中有效; PHP 5.3.6+时, 'mysql:dbname=mydatabase;host=127.0.0.1;charset=utf8;' */
     public $charset = 'utf8';
-    /**
-     * 数据表前缀
-     * 当查询语句中使用 "{{tableName}}" 时，将使用该前缀作为数据表前缀
-     * @var string
-     */
+    /* @var string 数据表前缀,当查询语句中使用 "{{tableName}}" 时，将使用该前缀作为数据表前缀 */
     public $tablePrefix = 'cf_';
-    /**
-     * 启用或禁用预处理语句的模拟(数据查询参数是否在本地进行转义，该属性在 PHP 5.1.3+ 有效)
-     * PDO 默认为 true（在本地进行），设为 false 时转义将在 db 中进行
-     * @var bool
-     */
+    /* @var bool 启用或禁用预处理语句的模拟(数据查询参数是否在本地进行转义，该属性在 PHP 5.1.3+ 有效);PDO 默认为 true（在本地进行），设为 false 时转义将在 db 中进行 */
     public $emulatePrepare;
 
-    /**
-     * @var \PDO PDO链接数据库
-     */
+    /* @var \PDO PDO链接数据库 */
     private $_pdo;
-    private $_active = false; // 连接是否被激活
-    private $_attributes = []; // PDO连接属性
-    /**
-     * DB 当前事务处理
-     * @var Transaction
-     */
+    /* @var bool 连接是否被激活 */
+    private $_active = false;
+    /* @var array PDO连接属性 */
+    private $_attributes = [];
+    /* @var TableSchema[] */
+    private $_tableScheams = [];
+    /* @var Transaction 当前事务处理 */
     private $_transaction;
 
     /**
@@ -313,6 +307,59 @@ class Db extends \Helper\Base
         $this->setActive(true);
         $this->_pdo->beginTransaction();
         return $this->_transaction = new Transaction($this);
+    }
+
+    /**
+     * 引号包裹字段名称
+     * @param string $name
+     * @return string
+     */
+    public function quoteSimpleColumnName($name)
+    {
+        return '`' . $name . '`';
+    }
+
+    /**
+     * 引号包裹字段名称，带表名
+     * @param string $name
+     * @return string
+     */
+    public function quoteColumnName($name)
+    {
+        if (false !== ($pos = strrpos($name, '.'))) {
+            $prefix = $this->quoteTableName(substr($name, 0, $pos)) . '.';
+            $name = substr($name, $pos + 1);
+        } else {
+            $prefix = '';
+        }
+        return $prefix . ($name === '*' ? $name : $this->quoteSimpleColumnName($name));
+    }
+
+    /**
+     * 引号包裹表名称
+     * @param string $name
+     * @return string
+     */
+    public function quoteSimpleTableName($name)
+    {
+        return '`' . $name . '`';
+    }
+
+    /**
+     * 引号包裹表名称，带库名
+     * @param string $name
+     * @return string
+     */
+    public function quoteTableName($name)
+    {
+        if (false === strpos($name, '.')) {
+            return $this->quoteSimpleTableName($name);
+        }
+        $parts = explode('.', $name);
+        foreach ($parts as $i => $part) {
+            $parts[$i] = $this->quoteSimpleTableName($part);
+        }
+        return implode('.', $parts);
     }
 
     /**
@@ -577,5 +624,75 @@ class Db extends \Helper\Base
     public function pagination($criteria, $params = [])
     {
         return new Db\Pagination\Pagination($criteria, $params, $this);
+    }
+
+    /**
+     * 包含table的元数据
+     * @param string $name
+     * @param bool $refresh
+     * @return TableSchema|mixed
+     */
+    public function getTable($name, $refresh = false)
+    {
+        if (false === $refresh && isset($this->_tableScheams[$name])) {
+            return $this->_tableScheams[$name];
+        } else {
+            if (null !== $this->tablePrefix && false !== strpos($name, '{{')) {
+                $realName = preg_replace('/\{\{(.*?)\}\}/', $this->tablePrefix . '$1', $name);
+            } else {
+                $realName = $name;
+            }
+
+            $tableSchema = new TableSchema();
+            // 构建表名
+            $parts = explode('.', str_replace(['`', '"'], '', $realName));
+            if (isset($parts[1])) {
+                $tableSchema->schemaName = $parts[0];
+                $tableSchema->name = $parts[1];
+                $tableSchema->rawName = $this->quoteTableName($tableSchema->schemaName) . '.' . $this->quoteTableName($tableSchema->name);
+            } else {
+                $tableSchema->name = $parts[0];
+                $tableSchema->rawName = $this->quoteTableName($tableSchema->name);
+            }
+            // 收集表信息
+            $sql = 'SHOW FULL COLUMNS FROM ' . $tableSchema->rawName;
+            try {
+                $columns = $this->createCommand()
+                    ->setText($sql)
+                    ->queryAll();
+            } catch (\Exception $e) {
+                return false;
+            }
+            foreach ($columns as $column) {
+                // 创建 table-column-schema
+                $c = new ColumnSchema();
+                $c->name = $column['Field'];
+                $c->rawName = $this->quoteColumnName($column->name);
+                $c->allowNull = $column['Null'] === 'YES';
+                $c->isPrimaryKey = false !== strpos($column['Key'], 'PRI');
+                $c->isForeignKey = false;
+                $c->init($column['Type'], $column['Default']);
+                $c->autoIncrement = false !== strpos(strtolower($column['Extra']), 'auto_increment');
+                if (isset($column['Comment'])) {
+                    $c->comment = $column['Comment'];
+                }
+
+                $tableSchema->columns[$c->name] = $c;
+                if ($c->isPrimaryKey) {
+                    if (null === $tableSchema->primaryKey) {
+                        $tableSchema->primaryKey = $c->name;
+                    } else if (is_string($tableSchema->primaryKey)) {
+                        $tableSchema->primaryKey = [$tableSchema->primaryKey, $c->name];
+                    } else {
+                        $tableSchema->primaryKey[] = $c->name;
+                    }
+                    if ($c->autoIncrement) {
+                        $tableSchema->sequenceName = '';
+                    }
+                }
+            }
+
+            return $this->_tableScheams[$name] = $tableSchema;
+        }
     }
 }

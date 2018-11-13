@@ -47,8 +47,9 @@ abstract class Builder extends Base
         if (false !== ($pos = strrpos($name, '.'))) {
             $prefix = $this->quoteTableName(substr($name, 0, $pos)) . '.';
             $name = substr($name, $pos + 1);
-        } else
+        } else {
             $prefix = '';
+        }
         return $prefix . ($name === '*' ? $name : $this->quoteSimpleColumnName($name));
     }
 
@@ -69,11 +70,13 @@ abstract class Builder extends Base
      */
     public function quoteTableName($name)
     {
-        if (false === strpos($name, '.'))
+        if (false === strpos($name, '.')) {
             return $this->quoteSimpleTableName($name);
+        }
         $parts = explode('.', $name);
-        foreach ($parts as $i => $part)
+        foreach ($parts as $i => $part) {
             $parts[$i] = $this->quoteSimpleTableName($part);
+        }
         return implode('.', $parts);
     }
 

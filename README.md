@@ -228,6 +228,13 @@ $res = $db->pagination($sql, [
 var_dump($res);
 ```
 
+### 9. TableSchema 获取表结构信息
+```
+// 获取表结构
+$schema = $db->getTable('{{stu}}');
+var_dump($schema);
+```
+
 ## ====== 异常代码集合 ======
 
 
