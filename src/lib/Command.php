@@ -94,7 +94,6 @@ class Command extends Base
                 $this->_statement = $this->getDb()
                     ->getPdoInstance()
                     ->prepare($text);
-                var_dump($text);
                 if (empty($params)) {
                     $this->_statement->execute();
                 } else {
