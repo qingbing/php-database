@@ -27,13 +27,13 @@ class TestCriteria extends Tester
         $db = \Db::getInstance();
 
         $criteria1 = (new Criteria())
-            ->setSelect('c.name as courseName')
-            ->addJoin("LEFT JOIN {{stu_course}} c ON(t.id=c.stu_id)");
+            ->setSelect(['c.name' => 'courseName'])
+            ->addJoin("LEFT JOIN `{{stu_course}}` c ON(t.`id`=c.`stu_id`)");
 
         $criteria = (new Criteria())
             ->setTable('{{stu}}')
             ->setAlias('t')
-            ->setSelect('t.id,t.name, t.sex')
+            ->setSelect(['t.id', 't.name', 't.sex'])
             ->addWhere('t.id>:startId', [
                 ':startId' => 2
             ])

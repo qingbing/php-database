@@ -73,7 +73,7 @@ class TestBuilder extends Tester
         // 查询
         $res = $db->getFindBuilder()
             ->setTable('{{stu}}')
-            ->setSelect('id, name')
+            ->setSelect(['id', 'name'])
             ->addWhere('id=:id', [':id' => $lastId])
             ->queryAll();
         var_dump($res);

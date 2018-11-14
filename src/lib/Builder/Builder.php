@@ -175,7 +175,7 @@ trait BuilderColumns
      * @param array $data
      * @return $this
      */
-    public function setColumns($data)
+    public function setColumns(array $data)
     {
         unset($this->query['columns']);
         foreach ($data as $field => $value) {
@@ -254,12 +254,12 @@ trait BuilderWhere
         $params = [];
         foreach ($attributes as $k => $v) {
             if ($v instanceof Expression) {
-                $t[] = $k . '=' . $v->expression;
+                $t[] = $this->quoteColumnName($k) . '=' . $v->expression;
                 continue;
             }
             $bk = $this->getBindKey();
             $params[$bk] = $v;
-            $t[] = $k . '=' . $bk;
+            $t[] = $this->quoteColumnName($k) . '=' . $bk;
         }
         return $this->addWhere(implode(' AND ', $t), $params, $operator);
     }
@@ -282,7 +282,7 @@ trait BuilderWhere
             $keyword = '%' . strtr($keyword, ['%' => '\%', '_' => '\_', '\\' => '\\\\']) . '%';
         }
         $bk = $this->getBindKey();
-        $condition = $column
+        $condition = $this->quoteColumnName($column)
             . ($isLike ? " LIKE " : " NOT LIKE ")
             . $bk;
         return $this->addWhere($condition, [
@@ -318,14 +318,14 @@ trait BuilderWhere
         } else if (1 === $n) {
             $value = reset($values);
             if (null === $value) {
-                $condition = $column . ($isIn ? ' IS NULL' : ' IS NOT NULL');
+                $condition = $this->quoteColumnName($column) . ($isIn ? ' IS NULL' : ' IS NOT NULL');
             } else {
                 if ($value instanceof Expression) {
-                    $condition = $column . ($isIn ? '=' : '!=') . $value->expression;
+                    $condition = $this->quoteColumnName($column) . ($isIn ? '=' : '!=') . $value->expression;
                 } else {
                     $bk = $this->getBindKey();
                     $this->addParam($bk, $value);
-                    $condition = $column . ($isIn ? '=' : '!=') . $bk;
+                    $condition = $this->quoteColumnName($column) . ($isIn ? '=' : '!=') . $bk;
                 }
             }
         } else {
@@ -338,7 +338,7 @@ trait BuilderWhere
                 $params[] = $bk = $this->getBindKey();
                 $this->addParam($bk, $value);
             }
-            $condition = $column . ($isIn ? ' IN ' : ' NOT IN ') . '(' . implode(', ', $params) . ')';
+            $condition = $this->quoteColumnName($column) . ($isIn ? ' IN ' : ' NOT IN ') . '(' . implode(', ', $params) . ')';
         }
         return $this->addWhere($condition, [], $operator);
     }
@@ -382,7 +382,7 @@ trait BuilderWhere
             $params[$endKey] = $endVar;
         }
 
-        $condition = $column . " BETWEEN $startKey AND $endKey";
+        $condition = $this->quoteColumnName($column) . " BETWEEN $startKey AND $endKey";
         return $this->addWhere($condition, $params, $operator);
     }
 
@@ -448,9 +448,14 @@ trait BuilderFind
         if (is_array($select)) {
             $t = [];
             foreach ($select as $field => $alias) {
-                $field = $this->quoteColumnName($field);
-                $alias = $this->quoteColumnName($alias);
-                array_push($t, "{$field} AS {$alias}");
+                if (is_int($field)) {
+                    $alias = $this->quoteColumnName($alias);
+                    array_push($t, "{$alias}");
+                } else {
+                    $field = $this->quoteColumnName($field);
+                    $alias = $this->quoteColumnName($alias);
+                    array_push($t, "{$field} AS {$alias}");
+                }
             }
             $select = implode(',', $t);
         }

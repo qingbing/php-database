@@ -26,7 +26,7 @@ class FindBuilder extends SqlBuilder
      */
     public function count($params = [])
     {
-        $this->setSelect('COUNT(*) AS total')
+        $this->setSelect('COUNT(*) AS ' . $this->quoteColumnName('total'))
             ->setLimit(-1);
         $record = $this->getDb()
             ->createCommand()
@@ -90,11 +90,7 @@ class FindBuilder extends SqlBuilder
         }
         $sql .= " FROM " . $this->quoteTableName($query['table']);
         // ALIAS
-        if (isset($query['alias']) && !empty($query['alias'])) {
-            $sql .= " {$query['alias']}";
-        } else {
-            $sql .= " t";
-        }
+        $sql .= " AS " . $this->quoteColumnName((isset($query['alias']) && !empty($query['alias'])) ? $query['alias'] : 't');
         // JOIN
         if (isset($query['join']) && !empty($query['join']))
             $sql .= ' ' . (is_array($query['join']) ? implode(" ", $query['join']) : $query['join']);
