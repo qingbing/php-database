@@ -36,7 +36,7 @@ class Transaction extends Base
             $this->_db->getPdoInstance()->commit();
             $this->_active = false;
         } else {
-            throw new Exception('"Transaction"尚属未激活状态，不能执行"commit"和"rollback"操作', 100800601);
+            throw new Exception('"Transaction"尚属未激活状态，不能执行"commit"和"rollback"操作', 101300601);
         }
     }
 
@@ -50,7 +50,7 @@ class Transaction extends Base
             $this->_db->getPdoInstance()->rollBack();
             $this->_active = false;
         } else {
-            throw new Exception('"Transaction"尚属未激活状态，不能执行"commit"和"rollback"操作', 100800602);
+            throw new Exception('"Transaction"尚属未激活状态，不能执行"commit"和"rollback"操作', 101300602);
         }
     }
 

@@ -24,7 +24,7 @@ class TestTransaction extends Tester
         /**
          * 获取db实例
          */
-        $db = \Db::getInstance();
+        $db = \Db::getInstance('database');
         $transaction = $db->beginTransaction();
 
         // 更新

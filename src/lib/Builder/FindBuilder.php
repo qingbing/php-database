@@ -86,7 +86,7 @@ class FindBuilder extends SqlBuilder
         }
         // FROM
         if (!isset($query['table']) || empty($query['table'])) {
-            throw new Exception('Find查询必须带有"table"参数', 100800501);
+            throw new Exception('Find查询必须带有"table"参数', 101300501);
         }
         $sql .= " FROM " . $this->quoteTableName($query['table']);
         // ALIAS
@@ -115,7 +115,7 @@ class FindBuilder extends SqlBuilder
                 $sql .= ", {$query['offset']}";
             }
         } elseif (isset($query['offset']) && $query['offset'] > 0) {
-            throw new Exception('"offset"必须和"limit"配对出现', 100800502);
+            throw new Exception('"offset"必须和"limit"配对出现', 101300502);
         }
         return $sql;
     }

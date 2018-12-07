@@ -43,7 +43,7 @@ class DeleteBuilder extends SqlBuilder
         ) {
             throw new Exception(str_cover('"{type}"查询参数不完整', [
                 '{type}' => 'delete'
-            ]), 100800401);
+            ]), 101300401);
         }
         return 'DELETE FROM ' . $this->quoteTableName($query['table']) . ' WHERE ' . $query['where'];
     }

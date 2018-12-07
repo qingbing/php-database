@@ -24,7 +24,7 @@ class TestPagination extends Tester
         /**
          * 获取db实例
          */
-        $db = \Db::getInstance();
+        $db = \Db::getInstance('database');
 
         $criteria = (new Criteria())
             ->setTable('{{stu}}')

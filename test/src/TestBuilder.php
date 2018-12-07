@@ -22,7 +22,7 @@ class TestBuilder extends Tester
         /**
          * 获取db实例
          */
-        $db = \Db::getInstance();
+        $db = \Db::getInstance('database');
 
         // 插入
         $res = $db->getInsertBuilder()

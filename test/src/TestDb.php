@@ -23,7 +23,7 @@ class TestDb extends Tester
         /**
          * 获取db实例
          */
-        $db = \Db::getInstance();
+        $db = \Db::getInstance('database');
 
         /**
          * 基础信息获取

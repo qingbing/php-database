@@ -51,7 +51,7 @@ class UpdateBuilder extends SqlBuilder
         ) {
             throw new Exception(str_cover('"{type}"查询参数不完整', [
                 '{type}' => 'update'
-            ]), 100800201);
+            ]), 101300201);
         }
         $setV = $VS = [];
         foreach ($query['columns'] as $k => $v) {

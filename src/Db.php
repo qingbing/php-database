@@ -6,6 +6,7 @@
  * Version      :   1.0
  */
 
+use Abstracts\Component;
 use Db\Builder\DeleteBuilder;
 use Db\Builder\FindBuilder;
 use Db\Builder\InsertBuilder;
@@ -21,25 +22,8 @@ defined('PHP_DEBUG') or define('PHP_DEBUG', false);
 /**
  * Class Db
  */
-class Db extends \Helper\Base
+class Db extends Component
 {
-    private static $_instances = [];
-
-    /**
-     * 获取Db连接实例
-     * @param string $type
-     * @return $this
-     * @throws Exception
-     */
-    public static function getInstance($type = 'master')
-    {
-        if (!isset(self::$_instances[$type])) {
-            $config = Config::getInstance('database', 'master')->params('database.mysql');
-            return self::$_instances[$type] = new self($config);
-        }
-        return self::$_instances[$type];
-    }
-
     /* @var string 数据库链接串 eg：'mysql:dbname=mydatabase;host=127.0.0.1;charset=utf8;' */
     public $dsn;
     /* @var string 数据库连接用户 */
@@ -69,17 +53,6 @@ class Db extends \Helper\Base
     private $_tableScheams = [];
     /* @var Transaction 当前事务处理 */
     private $_transaction;
-
-    /**
-     * Db constructor.
-     * @param array $config
-     * @throws Exception
-     */
-    public function __construct(array $config = [])
-    {
-        $this->configure($config);
-        $this->init();
-    }
 
     /**
      * 构造函数之后的初始化
@@ -117,7 +90,11 @@ class Db extends \Helper\Base
     public function pushLog($message, array $context = [])
     {
         if ($this->logFile) {
-            Log::getInstance("SQL")->pushInfo($message, $context);
+            Log::getInstance([
+                'channel' => 'SQL',
+                'level' => 'info',
+                'maxSize' => '1000000',
+            ])->pushInfo($message, $context);
         }
     }
 
@@ -130,7 +107,11 @@ class Db extends \Helper\Base
     public function pushErrorLog($message, array $context = [])
     {
         if ($this->logFile) {
-            Log::getInstance("ERROR-SQL")->pushInfo($message, $context);
+            Log::getInstance([
+                'channel' => 'ERROR-SQL',
+                'level' => 'info',
+                'maxSize' => '1000000',
+            ])->pushInfo($message, $context);
         }
     }
 
@@ -151,7 +132,7 @@ class Db extends \Helper\Base
     {
         if (null === $this->_pdo) {
             if (empty($this->dsn)) {
-                throw new Exception('数据库连接串"dsn"不能为空', 100800101);
+                throw new Exception('数据库连接串"dsn"不能为空', 101300101);
             }
             try {
                 Timer::begin('db-connect');
@@ -169,7 +150,7 @@ class Db extends \Helper\Base
                 } else {
                     $err_msg = '数据库连接失败.(' . $e->getCode() . ')';
                 }
-                throw new Exception($err_msg, 100800102, $e->errorInfo);
+                throw new Exception($err_msg, 101300102, $e->errorInfo);
             }
         }
     }
@@ -194,12 +175,12 @@ class Db extends \Helper\Base
         if (!class_exists($pdoClass)) {
             throw new Exception(str_cover('PDO连接库"{className}"不存在', [
                 '{className}' => $pdoClass
-            ]), 100800104);
+            ]), 101300104);
         }
         // 创建 PDO 实例
         @$instance = new $pdoClass($this->dsn, $this->username, $this->password);
         if (!$instance) {
-            throw new Exception('PDO连接数据库失败.', 100800103);
+            throw new Exception('PDO连接数据库失败.', 101300103);
         }
         return $instance;
     }
@@ -667,7 +648,7 @@ class Db extends \Helper\Base
                 // 创建 table-column-schema
                 $c = new ColumnSchema();
                 $c->name = $column['Field'];
-                $c->rawName = $this->quoteColumnName($column->name);
+                $c->rawName = $this->quoteColumnName($column['Field']);
                 $c->allowNull = $column['Null'] === 'YES';
                 $c->isPrimaryKey = false !== strpos($column['Key'], 'PRI');
                 $c->isForeignKey = false;

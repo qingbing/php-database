@@ -99,7 +99,7 @@ class InsertBuilder extends SqlBuilder
         ) {
             throw new Exception(str_cover('"{type}"查询参数不完整', [
                 '{type}' => 'insert'
-            ]), 100800301);
+            ]), 101300301);
         }
         $KS = $VS = [];
         foreach ($query['columns'] as $k => $v) {
@@ -133,7 +133,7 @@ class InsertBuilder extends SqlBuilder
         ) {
             throw new Exception(str_cover('"{type}"查询参数不完整', [
                 '{type}' => 'multi-insert'
-            ]), 100800302);
+            ]), 101300302);
         }
         $KS = [];
         foreach ($query['multi-fields'] as $k) {
