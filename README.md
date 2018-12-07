@@ -11,7 +11,7 @@ Database 相关操作。可以单独使用。
 ## Db 使用方法
 ### 1. 获取db实例
 ```
-$db = \Db::getInstance();
+$db = \Db::getInstance('database');
 ```
 ### 2. 基础信息获取
 ```
