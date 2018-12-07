@@ -93,7 +93,7 @@ class Db extends Component
             Log::getInstance([
                 'channel' => 'SQL',
                 'level' => 'info',
-                'maxSize' => '1000000',
+                'maxSize' => 1000000, // default
             ])->pushInfo($message, $context);
         }
     }
@@ -110,7 +110,7 @@ class Db extends Component
             Log::getInstance([
                 'channel' => 'ERROR-SQL',
                 'level' => 'info',
-                'maxSize' => '1000000',
+                'maxSize' => 1000000, // default
             ])->pushInfo($message, $context);
         }
     }
