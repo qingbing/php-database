@@ -1,15 +1,15 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: charles
- * Date: 2018/10/30
- * Time: 下午4:44
+ * Link         :   http://www.phpcorner.net
+ * User         :   qingbing<780042175@qq.com>
+ * Date         :   2018-10-28
+ * Version      :   1.0
  */
 
 namespace Db\Pagination;
 
+use Abstracts\Base;
 use Db\Builder\Criteria;
-use Helper\Base;
 use Helper\Exception;
 
 /**

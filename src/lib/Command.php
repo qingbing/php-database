@@ -1,15 +1,14 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: charles
- * Date: 2018/10/29
- * Time: 下午4:40
+ * Link         :   http://www.phpcorner.net
+ * User         :   qingbing<780042175@qq.com>
+ * Date         :   2018-10-28
+ * Version      :   1.0
  */
 
 namespace Db;
 
-
-use Helper\Base;
+use Abstracts\Base;
 use Helper\Timer;
 
 class Command extends Base

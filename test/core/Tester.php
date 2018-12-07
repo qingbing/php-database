@@ -8,7 +8,7 @@
 
 namespace TestCore;
 
-use Helper\SingleTon;
+use Abstracts\SingleTon;
 
 /**
  * Class Tester

@@ -8,7 +8,7 @@
 
 namespace Db;
 
-use Helper\Base;
+use Abstracts\Base;
 
 class ColumnSchema extends Base
 {
