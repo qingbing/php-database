@@ -17,7 +17,7 @@ use Db\TableSchema;
 use Db\Transaction;
 use Helper\Timer;
 
-defined('PHP_DEBUG') or define('PHP_DEBUG', false);
+defined('APP_DEBUG') or define('APP_DEBUG', false);
 
 /**
  * Class Db
@@ -145,7 +145,7 @@ class Db extends Component
                     'lastTime' => Timer::end('db-connect'),
                 ]);
             } catch (\PDOException $e) {
-                if (PHP_DEBUG) {
+                if (APP_DEBUG) {
                     $err_msg = '数据库连接失败: (' . $e->getCode() . ')' . $e->getMessage();
                 } else {
                     $err_msg = '数据库连接失败.(' . $e->getCode() . ')';
