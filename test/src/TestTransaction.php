@@ -9,7 +9,6 @@
 namespace Test;
 
 use Components\Db;
-use Log;
 use TestCore\Tester;
 
 
