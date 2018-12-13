@@ -2,80 +2,42 @@
 /**
  * Link         :   http://www.phpcorner.net
  * User         :   qingbing<780042175@qq.com>
- * Date         :   2018-10-28
+ * Date         :   2018-12-12
  * Version      :   1.0
  */
 
-namespace Db;
+namespace DbSupports;
+
 
 use Abstracts\Base;
 
 class ColumnSchema extends Base
 {
-    /**
-     * 列名（不带引用）
-     * @var string
-     */
+    /* @var string 列名（不带引用） */
     public $name;
-    /**
-     * 列名（带引用）
-     * @var string
-     */
+    /* @var string 列名（带引用） */
     public $rawName;
-    /**
-     * 是否允许为空
-     * @var bool
-     */
+    /* @var bool 是否允许为空 */
     public $allowNull;
-    /**
-     * 数据表设计类型
-     * @var string
-     */
+    /* @var string 数据表设计类型 */
     public $dbType;
-    /**
-     * 字段对应的 PHP 类型
-     * @var string
-     */
+    /* @var string 字段对应的 PHP 类型 */
     public $type;
-    /**
-     * 字段默认值
-     * @var mixed
-     */
+    /* @var mixed 字段默认值 */
     public $defaultValue;
-    /**
-     * 字段的长短
-     * @var int
-     */
+    /* @var int 字段的长短 */
     public $size;
-    /**
-     * 数字类型时，数字类型的精度
-     * @var int
-     */
+    /* @var int 数字类型时，数字类型的精度 */
     public $precision;
-    /**
-     * 数字类型时,标度
-     * @var int
-     */
+    /* @var int 数字类型时,标度 */
     public $scale;
-    /**
-     * 该字段是否为主键
-     * @var bool
-     */
+    /* @var bool 该字段是否为主键 */
     public $isPrimaryKey;
-    /**
-     * 该字段是否为外键
-     * @var bool
-     */
+    /* @var bool 该字段是否为外键 */
     public $isForeignKey;
-    /**
-     * 该字段是否为自增
-     * @var bool
-     */
+    /* @var bool 该字段是否为自增 */
     public $autoIncrement = false;
-    /**
-     * 该字段的备注信息
-     * @var string
-     */
+    /* @var string 该字段的备注信息 */
     public $comment = '';
 
     /**

@@ -21,11 +21,10 @@
         "qingbing/php-log": ">=1.0, <2.0"
     },
     "autoload": {
-        "classmap": [
-            "src/Db.php"
-        ],
         "psr-4": {
-            "Db\\": "src/lib"
+            "Abstracts\\": "src/abstracts",
+            "DbSupports\\": "src/supports",
+            "Components\\": "src/components"
         }
     },
     "autoload-dev": {

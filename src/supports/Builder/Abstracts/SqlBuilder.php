@@ -2,28 +2,32 @@
 /**
  * Link         :   http://www.phpcorner.net
  * User         :   qingbing<780042175@qq.com>
- * Date         :   2018-10-29
+ * Date         :   2018-12-12
  * Version      :   1.0
  */
 
-namespace Db\Builder;
+namespace DbSupports\Builder\Abstracts;
 
-abstract class SqlBuilder extends Builder
+
+use Components\Db;
+
+abstract class SqlBuilder extends BaseBuilder
 {
-    private $_db; // \Db
+    /* @var Db */
+    private $_db;
 
     /**
      * Builder constructor.
-     * @param \Db $db
+     * @param Db $db
      */
-    public function __construct(\Db $db)
+    public function __construct(Db $db)
     {
         $this->_db = $db;
     }
 
     /**
      * 数据库连接
-     * @return \Db
+     * @return Db
      */
     public function getDb()
     {

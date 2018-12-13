@@ -8,7 +8,7 @@
 
 namespace Test;
 
-use Db\Builder\Criteria;
+use Components\Db;
 use TestCore\Tester;
 
 
@@ -24,7 +24,7 @@ class TestSchema extends Tester
         /**
          * 获取db实例
          */
-        $db = \Db::getInstance('database');
+        $db = Db::getInstance('database');
 
         // 获取表结构
         $schema = $db->getTable('{{stu}}');

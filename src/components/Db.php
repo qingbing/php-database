@@ -2,19 +2,24 @@
 /**
  * Link         :   http://www.phpcorner.net
  * User         :   qingbing<780042175@qq.com>
- * Date         :   2018-10-27
+ * Date         :   2018-12-12
  * Version      :   1.0
  */
 
+namespace Components;
+
+
 use Abstracts\Component;
-use Db\Builder\DeleteBuilder;
-use Db\Builder\FindBuilder;
-use Db\Builder\InsertBuilder;
-use Db\Builder\UpdateBuilder;
-use Db\ColumnSchema;
-use Db\Command;
-use Db\TableSchema;
-use Db\Transaction;
+use DbSupports\Builder\DeleteBuilder;
+use DbSupports\Builder\FindBuilder;
+use DbSupports\Builder\InsertBuilder;
+use DbSupports\Builder\UpdateBuilder;
+use DbSupports\ColumnSchema;
+use DbSupports\Command;
+use DbSupports\Pagination\Pagination;
+use DbSupports\TableSchema;
+use DbSupports\Transaction;
+use Exception;
 use Helper\Timer;
 
 defined('APP_DEBUG') or define('APP_DEBUG', false);
@@ -559,7 +564,7 @@ class Db extends Component
 
     /**
      * 查询影响的结果集行数，对于 select ，rowCount() 返回有可能为部分结果，这里用统计更好
-     * @param \Db\Builder\Criteria $criteria
+     * @param \DbSupports\Builder\Criteria $criteria
      * @return int
      * @throws Exception
      */
@@ -572,7 +577,7 @@ class Db extends Component
 
     /**
      * 查询第一条结果集
-     * @param \Db\Builder\Criteria $criteria
+     * @param \DbSupports\Builder\Criteria $criteria
      * @return array
      * @throws Exception
      */
@@ -585,7 +590,7 @@ class Db extends Component
 
     /**
      * 查询所有结果集
-     * @param \Db\Builder\Criteria $criteria
+     * @param \DbSupports\Builder\Criteria $criteria
      * @return array
      * @throws Exception
      */
@@ -597,14 +602,14 @@ class Db extends Component
     }
 
     /**
-     * @param \Db\Builder\Criteria|array|string $criteria
+     * @param \DbSupports\Builder\Criteria|array|string $criteria
      * @param array $params
-     * @return \Db\Pagination\Pagination
+     * @return Pagination
      * @throws \Helper\Exception
      */
     public function pagination($criteria, $params = [])
     {
-        return new Db\Pagination\Pagination($criteria, $params, $this);
+        return new Pagination($criteria, $params, $this);
     }
 
     /**

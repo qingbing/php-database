@@ -8,7 +8,8 @@
 
 namespace Test;
 
-use Db\Builder\Criteria;
+use Components\Db;
+use DbSupports\Builder\Criteria;
 use TestCore\Tester;
 
 
@@ -24,7 +25,7 @@ class TestCriteria extends Tester
         /**
          * 获取db实例
          */
-        $db = \Db::getInstance('database');
+        $db = Db::getInstance('database');
 
         $criteria1 = (new Criteria())
             ->setSelect(['c.name' => 'courseName'])

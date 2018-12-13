@@ -2,14 +2,18 @@
 /**
  * Link         :   http://www.phpcorner.net
  * User         :   qingbing<780042175@qq.com>
- * Date         :   2018-10-29
+ * Date         :   2018-12-12
  * Version      :   1.0
  */
 
-namespace Db\Builder;
+namespace DbSupports\Builder;
 
 
-use Db\Exception;
+use DbSupports\Builder\Abstracts\SqlBuilder;
+use DbSupports\Builder\Traits\BuilderFind;
+use DbSupports\Builder\Traits\BuilderTable;
+use DbSupports\Builder\Traits\BuilderWhere;
+use DbSupports\Exception;
 
 class FindBuilder extends SqlBuilder
 {

@@ -8,6 +8,7 @@
 
 namespace Test;
 
+use Components\Db;
 use TestCore\Tester;
 
 class TestBuilder extends Tester
@@ -22,7 +23,7 @@ class TestBuilder extends Tester
         /**
          * 获取db实例
          */
-        $db = \Db::getInstance('database');
+        $db = Db::getInstance('database');
 
         // 插入
         $res = $db->getInsertBuilder()

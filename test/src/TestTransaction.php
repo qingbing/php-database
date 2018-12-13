@@ -8,6 +8,7 @@
 
 namespace Test;
 
+use Components\Db;
 use Log;
 use TestCore\Tester;
 
@@ -24,7 +25,7 @@ class TestTransaction extends Tester
         /**
          * 获取db实例
          */
-        $db = \Db::getInstance('database');
+        $db = Db::getInstance('database');
         $transaction = $db->beginTransaction();
 
         // 更新
@@ -36,6 +37,7 @@ class TestTransaction extends Tester
             ->addWhere('id=:id', [':id' => 12])
             ->execute();
         var_dump($res);
+
 
 //        $transaction->commit();
         $transaction->rollback();
