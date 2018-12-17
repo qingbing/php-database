@@ -6,12 +6,12 @@
  * Version      :   1.0
  */
 return [
-    'dsn' => 'mysql:host=127.0.0.1;dbname=cf_test;charset=utf8;',
+    'dsn' => 'mysql:host=127.0.0.1;dbname=pf_test;charset=utf8;',
     'username' => 'root',
     'password' => '123456',
     'autoConnect' => true,
     'pdoClass' => '\PDO',
     'logFile' => true,
-    'tablePrefix' => 'cf_',
+    'tablePrefix' => 'pf_',
     'emulatePrepare' => '',
 ];
