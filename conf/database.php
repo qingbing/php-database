@@ -6,12 +6,14 @@
  * Version      :   1.0
  */
 return [
-    'dsn' => 'mysql:host=127.0.0.1;dbname=pf_test;charset=utf8;',
-    'username' => 'root',
-    'password' => '123456',
-    'autoConnect' => true,
-    'pdoClass' => '\PDO',
-    'logFile' => true,
-    'tablePrefix' => 'pf_',
-    'emulatePrepare' => '',
+    'master' => [
+        'dsn' => 'mysql:host=127.0.0.1;dbname=pf_test;charset=utf8;',
+        'username' => 'root',
+        'password' => '123456',
+        'autoConnect' => true,
+        'pdoClass' => '\PDO',
+        'logFile' => true,
+        'tablePrefix' => 'pf_',
+        'emulatePrepare' => '',
+    ]
 ];

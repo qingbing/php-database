@@ -24,7 +24,10 @@ class TestDb extends Tester
         /**
          * 获取db实例
          */
-        $db = Db::getInstance('database');
+        $db = Db::getInstance([
+            'c-file' => 'database',
+            'c-group' => 'master',
+        ]);
 
         /**
          * 基础信息获取

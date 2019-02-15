@@ -24,7 +24,10 @@ class TestSchema extends Tester
         /**
          * 获取db实例
          */
-        $db = Db::getInstance('database');
+        $db = Db::getInstance([
+            'c-file' => 'database',
+            'c-group' => 'master',
+        ]);
 
         // 获取表结构
         $schema = $db->getTable('{{stu}}');

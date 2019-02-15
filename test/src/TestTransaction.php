@@ -24,7 +24,10 @@ class TestTransaction extends Tester
         /**
          * 获取db实例
          */
-        $db = Db::getInstance('database');
+        $db = Db::getInstance([
+            'c-file' => 'database',
+            'c-group' => 'master',
+        ]);
         $transaction = $db->beginTransaction();
 
         // 更新

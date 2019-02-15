@@ -11,7 +11,14 @@ Database 相关操作。可以单独使用。
 ## Db 使用方法
 ### 1. 获取db实例
 ```
+// 单独使用，只有一个配置时使用方式
 $db = \Db::getInstance('database');
+
+// 配合后面的db-model
+$db = Db::getInstance([
+    'c-file' => 'database',
+    'c-group' => 'master',
+]);
 ```
 ### 2. 基础信息获取
 ```
