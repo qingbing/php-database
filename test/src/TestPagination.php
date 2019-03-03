@@ -36,8 +36,7 @@ class TestPagination extends Tester
                 ':startId' => 2
             ]);
 
-        $res = $db->pagination($criteria)
-            ->getData(2, 3);
+        $res = $db->pagination($criteria, [], 2, 3);
         var_dump($res);
 
 
@@ -45,8 +44,7 @@ class TestPagination extends Tester
         $sql = "SELECT * FROM `{{stu}}` t WHERE t.id>:startId";
         $res = $db->pagination($sql, [
             ':startId' => 2
-        ])
-            ->getData(2);
+        ], 2);
         var_dump($res);
 
     }

@@ -67,7 +67,7 @@ class Pagination extends Base
     /**
      * 获取分页查询结果
      * @param int $pageSize
-     * @param null $pageNo
+     * @param null|int $pageNo
      * @return array
      * @throws \Exception
      */

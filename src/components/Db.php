@@ -602,14 +602,17 @@ class Db extends Component
     }
 
     /**
+     * 获取分页查询结果
      * @param \DbSupports\Builder\Criteria|array|string $criteria
      * @param array $params
-     * @return Pagination
-     * @throws \Helper\Exception
+     * @param int $pageSize
+     * @param null|int $pageNo
+     * @return array
+     * @throws \Exception
      */
-    public function pagination($criteria, $params = [])
+    public function pagination($criteria, $params = [], $pageSize = 10, $pageNo = null)
     {
-        return new Pagination($criteria, $params, $this);
+        return (new Pagination($criteria, $params, $this))->getData($pageSize, $pageNo);
     }
 
     /**

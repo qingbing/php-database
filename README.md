@@ -221,8 +221,7 @@ $criteria = (new Criteria())
         ':startId' => 2
     ]);
 
-$res = $db->pagination($criteria)
-    ->getData(2, 3);
+$res = $db->pagination($criteria, [], 2, 3);
 var_dump($res);
 
 
@@ -230,9 +229,9 @@ var_dump(1111);
 $sql = "SELECT * FROM `{{stu}}` t WHERE t.id>:startId";
 $res = $db->pagination($sql, [
     ':startId' => 2
-])
-    ->getData(2);
+], 2);
 var_dump($res);
+
 ```
 
 ### 9. TableSchema 获取表结构信息
