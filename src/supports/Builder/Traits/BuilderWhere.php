@@ -83,7 +83,7 @@ trait BuilderWhere
      */
     public function addWhereLike($column, $keyword, $escape = true, $operator = 'AND', $isLike = true)
     {
-        if (empty($keyword)) {
+        if ('' === trim($keyword) || NULL === $keyword) {
             return $this;
         }
         if ($escape) {
