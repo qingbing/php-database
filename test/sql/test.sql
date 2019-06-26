@@ -1,7 +1,7 @@
 
 
-CREATE TABLE `cf_stu` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+CREATE TABLE `test_stu` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增ID',
   `name` varchar(50) NOT NULL COMMENT '姓名',
   `sex` varchar(50) NOT NULL COMMENT '性别',
   PRIMARY KEY (`id`)
@@ -9,9 +9,9 @@ CREATE TABLE `cf_stu` (
 
 
 
-CREATE TABLE `cf_stu_course` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `stu_id` int(11) NOT NULL COMMENT '学生ID',
+CREATE TABLE `test_stu_course` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `stu_id` BIGINT(20) UNSIGNED NOT NULL COMMENT '学生ID',
   `name` varchar(50) NOT NULL COMMENT '课程名称',
   PRIMARY KEY (`id`),
   KEY `stu_id`(`stu_id`)

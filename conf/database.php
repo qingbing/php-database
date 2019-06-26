@@ -7,13 +7,13 @@
  */
 return [
     'master' => [
-        'dsn' => 'mysql:host=127.0.0.1;dbname=pf_test;charset=utf8;',
+        'dsn' => 'mysql:host=127.0.0.1;dbname=pf_project;charset=utf8;',
         'username' => 'root',
         'password' => '123456',
         'autoConnect' => true,
         'pdoClass' => '\PDO',
         'logFile' => true,
-        'tablePrefix' => 'pf_',
+        'tablePrefix' => 'test_',
         'emulatePrepare' => '',
     ]
 ];
