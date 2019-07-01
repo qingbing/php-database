@@ -112,6 +112,8 @@ class ColumnSchema extends Base
             $this->defaultValue = bindec(trim($defaultValue, 'b\''));
         } else if ('timestamp' === $this->dbType && 'CURRENT_TIMESTAMP' === $defaultValue) {
             $this->defaultValue = null;
+        } else if ('datetime' === $this->dbType && 'CURRENT_TIMESTAMP' === $defaultValue) {
+            $this->defaultValue = null;
         } else {
             $this->defaultValue = $this->typecast($defaultValue);
         }
