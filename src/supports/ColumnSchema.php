@@ -68,7 +68,8 @@ class ColumnSchema extends Base
             $this->type = 'double';
         } else if (false !== strpos($dbType, 'bool')) {
             $this->type = 'boolean';
-        } else if (0 === strpos($dbType, 'int') && false === strpos($dbType, 'unsigned') || preg_match('/(bit|tinyint|smallint|mediumint|bigint)/', $dbType)) {
+//        } else if (0 === strpos($dbType, 'int') && false === strpos($dbType, 'unsigned') || preg_match('/(bit|tinyint|smallint|mediumint|bigint)/', $dbType)) {
+        } else if (0 === strpos($dbType, 'int') || preg_match('/(bit|tinyint|smallint|mediumint|bigint)/', $dbType)) {
             $this->type = 'integer';
         } else {
             $this->type = 'string';
