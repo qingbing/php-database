@@ -68,7 +68,7 @@ class ColumnSchema extends Base
             $this->type = 'double';
         } else if (false !== strpos($dbType, 'bool')) {
             $this->type = 'boolean';
-        } else if (0 === strpos($dbType, 'int') && false === strpos($dbType, 'unsigned') || preg_match('/(bit|tinyint|smallint|mediumint)/', $dbType)) {
+        } else if (0 === strpos($dbType, 'int') && false === strpos($dbType, 'unsigned') || preg_match('/(bit|tinyint|smallint|mediumint|bigint)/', $dbType)) {
             $this->type = 'integer';
         } else {
             $this->type = 'string';
@@ -110,9 +110,7 @@ class ColumnSchema extends Base
     {
         if (0 === strncmp($this->dbType, 'bit', 3)) {
             $this->defaultValue = bindec(trim($defaultValue, 'b\''));
-        } else if ('timestamp' === $this->dbType && 'CURRENT_TIMESTAMP' === $defaultValue) {
-            $this->defaultValue = null;
-        } else if ('datetime' === $this->dbType && 'CURRENT_TIMESTAMP' === $defaultValue) {
+        } elseif (('timestamp' === $this->dbType || 'datetime' === $this->dbType) && ('CURRENT_TIMESTAMP' === $defaultValue || 'current_timestamp()' === $defaultValue)) {
             $this->defaultValue = null;
         } else {
             $this->defaultValue = $this->typecast($defaultValue);
