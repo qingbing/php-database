@@ -9,9 +9,8 @@
 namespace Test;
 
 use Components\Db;
+use DBootstrap\Abstracts\Tester;
 use DbSupports\Builder\Criteria;
-use TestCore\Tester;
-
 
 class TestCriteria extends Tester
 {

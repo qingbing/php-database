@@ -20,6 +20,9 @@
         "qingbing/php-config": ">=1.0, <2.0",
         "qingbing/php-log": ">=1.0, <2.0"
     },
+    "require-dev": {
+        "qingbing/php-debug-bootstrap": "dev-master"
+    },
     "autoload": {
         "psr-4": {
             "Abstracts\\": "src/abstracts",

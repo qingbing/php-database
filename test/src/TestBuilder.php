@@ -9,7 +9,7 @@
 namespace Test;
 
 use Components\Db;
-use TestCore\Tester;
+use DBootstrap\Abstracts\Tester;
 
 class TestBuilder extends Tester
 {
